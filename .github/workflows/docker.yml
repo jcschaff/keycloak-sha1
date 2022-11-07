@@ -7,7 +7,10 @@ on:
       keycloak_sha1_version:
         description: Keycloak SHA-1 version
         required: true
-        default: 1.5.1
+        default: 0.9.0
+
+env:
+  REGISTRY: ghcr.io
 
 name: Docker
 
@@ -16,21 +19,26 @@ jobs:
     name: Docker
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Build
         run: ./gradlew jar -Pdependency.keycloak.version=${{ github.event.inputs.keycloak_version }}
+
       - run: cp build/libs/keycloak-sha1-${{ github.event.inputs.keycloak_sha1_version }}.jar docker
-      - name: Login to DockerHub
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
       - name: Build and push Docker image
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
           context: docker
           build-args: |
             keycloak_version=${{ github.event.inputs.keycloak_version }}
             keycloak_sha1_version=${{ github.event.inputs.keycloak_sha1_version }}
           push: true
-          tags: jcschaff/keycloak-sha1:${{ github.event.inputs.keycloak_version }}_${{ github.event.inputs.keycloak_sha1_version }},jcschaff/keycloak-sha1:latest
+          tags: ghcr.io/jcschaff/keycloak-sha1:${{ github.event.inputs.keycloak_version }}_${{ github.event.inputs.keycloak_sha1_version }},ghcr.io/jcschaff/keycloak-sha1:latest

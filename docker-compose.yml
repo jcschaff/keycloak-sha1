@@ -11,7 +11,7 @@ services:
       POSTGRES_PASSWORD: keycloak
 
   keycloak:
-    image: gleroy/keycloak-bcrypt
+    image: jcschaff/keycloak-sha1
     environment:
       KC_DB_URL: jdbc:postgresql://db/keycloak
       KC_DB_USERNAME: keycloak
@@ -21,8 +21,8 @@ services:
       KEYCLOAK_ADMIN_PASSWORD: admin
     ports:
       - 8443:8443
-    volumes:
-      - ./conf/server.keystore:/opt/keycloak/conf/server.keystore
+#    volumes:
+#      - ./conf/server.keystore:/opt/keycloak/conf/server.keystore
     security_opt:
       - 'label:disable'
     command: ["start", "--auto-build", "--db=postgres"]

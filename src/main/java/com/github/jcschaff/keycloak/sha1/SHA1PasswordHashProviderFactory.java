@@ -15,25 +15,23 @@
  * limitations under the License.
  */
 
-package com.github.leroyguillaume.keycloak.bcrypt;
+package com.github.jcschaff.keycloak.sha1;
 
 import org.keycloak.Config;
 import org.keycloak.credential.hash.PasswordHashProvider;
 import org.keycloak.credential.hash.PasswordHashProviderFactory;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.KeycloakSessionFactory;
-import org.keycloak.provider.ProviderFactory;
 
 /**
  * @author <a href="mailto:pro.guillaume.leroy@gmail.com">Guillaume Leroy</a>
  */
-public class BCryptPasswordHashProviderFactory implements PasswordHashProviderFactory {
-    public static final String ID = "bcrypt";
-    public static final int DEFAULT_ITERATIONS = 10;
+public class SHA1PasswordHashProviderFactory implements PasswordHashProviderFactory {
+    public static final String ID = "sha1";
 
     @Override
     public PasswordHashProvider create(KeycloakSession session) {
-        return new BCryptPasswordHashProvider(ID, DEFAULT_ITERATIONS);
+        return new SHA1PasswordHashProvider(ID);
     }
 
     @Override

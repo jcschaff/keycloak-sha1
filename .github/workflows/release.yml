@@ -20,7 +20,7 @@ jobs:
           java-version: '17'
 
       - name: Build
-        run: ./gradlew jar
+        run: ./gradlew assemble
 
       - name: Create release
         id: create_release
